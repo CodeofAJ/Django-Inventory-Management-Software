@@ -1,0 +1,351 @@
+{% extends "inventory/base.html" %}
+
+{% block title %}
+Inventory Report
+{% endblock %}
+
+{% block content %}
+
+<div class="dashboard">
+
+    <!-- Header -->
+
+    <div class="dashboard-header">
+
+        <div>
+
+            <h1>
+                Inventory Report
+            </h1>
+
+            <p>
+                Overview of current inventory levels
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- Filters -->
+
+    <div class="dashboard-card">
+
+        <div style="padding: 20px;">
+
+            <form method="GET">
+
+                <!-- Search -->
+
+                <input
+                    type="text"
+                    name="search"
+                    placeholder="Search product or SKU..."
+                    value="{{ search }}"
+                >
+
+
+                <!-- Category -->
+
+                <select name="category">
+
+                    <option value="">
+                        All Categories
+                    </option>
+
+                    {% for category in categories %}
+
+                    <option
+                        value="{{ category.id }}"
+                        {% if selected_category == category.id|stringformat:"s" %}
+                            selected
+                        {% endif %}
+                    >
+                        {{ category.name }}
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+
+                <!-- Stock Status -->
+
+                <select name="stock_status">
+
+                    <option value="">
+                        All Stock
+                    </option>
+
+                    <option
+                        value="normal"
+                        {% if stock_status == "normal" %}
+                            selected
+                        {% endif %}
+                    >
+                        Normal Stock
+                    </option>
+
+                    <option
+                        value="low"
+                        {% if stock_status == "low" %}
+                            selected
+                        {% endif %}
+                    >
+                        Low Stock
+                    </option>
+
+                    <option
+                        value="out"
+                        {% if stock_status == "out" %}
+                            selected
+                        {% endif %}
+                    >
+                        Out of Stock
+                    </option>
+
+                </select>
+
+
+                <button
+                    type="submit"
+                    class="dashboard-button"
+                >
+                    Filter
+                </button>
+
+
+                <a
+                    href="{% url 'inventory_report' %}"
+                    class="button"
+                >
+                    Clear
+                </a>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <br>
+
+
+    <!-- Report Table -->
+
+    <div class="dashboard-card">
+
+        <div class="card-header">
+
+            <div>
+
+                <h2>
+                    Inventory
+                </h2>
+
+                <p>
+                    Current stock levels
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+            <table class="dashboard-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Product
+                        </th>
+
+                        <th>
+                            SKU
+                        </th>
+
+                        <th>
+                            Category
+                        </th>
+
+                        <th>
+                            Current Stock
+                        </th>
+
+                        <th>
+                            Minimum Stock
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for product in page_obj %}
+
+                    <tr>
+
+                        <td>
+
+                            <strong>
+                                {{ product.name }}
+                            </strong>
+
+                        </td>
+
+
+                        <td>
+                            {{ product.sku }}
+                        </td>
+
+
+                        <td>
+
+                            {% if product.category %}
+
+                                {{ product.category.name }}
+
+                            {% else %}
+
+                                -
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td>
+                            {{ product.quantity }}
+                        </td>
+
+
+                        <td>
+                            {{ product.minimum_stock }}
+                        </td>
+
+
+                        <td>
+
+                            {% if product.quantity == 0 %}
+
+                                <span class="danger">
+                                    Out of Stock
+                                </span>
+
+                            {% elif product.quantity <= product.minimum_stock %}
+
+                                <span>
+                                    Low Stock
+                                </span>
+
+                            {% else %}
+
+                                <span>
+                                    Normal
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td colspan="6">
+
+                            No products found.
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- Pagination -->
+
+        <div
+            style="
+                display:flex;
+                justify-content:space-between;
+                align-items:center;
+                padding:20px;
+            "
+        >
+
+            <div>
+
+                {% if page_obj.has_previous %}
+
+                <a
+                    class="button"
+                    href="?page={{ page_obj.previous_page_number }}&search={{ search }}&category={{ selected_category }}&stock_status={{ stock_status }}"
+                >
+                    ← Previous
+                </a>
+
+                {% endif %}
+
+            </div>
+
+
+            <div>
+
+                Page
+
+                <strong>
+                    {{ page_obj.number }}
+                </strong>
+
+                of
+
+                <strong>
+                    {{ page_obj.paginator.num_pages }}
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                {% if page_obj.has_next %}
+
+                <a
+                    class="button"
+                    href="?page={{ page_obj.next_page_number }}&search={{ search }}&category={{ selected_category }}&stock_status={{ stock_status }}"
+                >
+                    Next →
+                </a>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

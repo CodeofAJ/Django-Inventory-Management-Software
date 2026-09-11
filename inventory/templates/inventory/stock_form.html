@@ -1,0 +1,36 @@
+{% extends "inventory/base.html" %}
+
+{% block title %}
+{{ movement_type }}
+{% endblock %}
+
+{% block content %}
+
+<h1>{{ movement_type }}</h1>
+
+<h3>
+    Product: {{ product.name }}
+</h3>
+
+<p>
+    Current Stock:
+    <strong>{{ product.quantity }}</strong>
+</p>
+
+<form method="POST">
+
+    {% csrf_token %}
+
+    {{ form.as_p }}
+
+    <button type="submit">
+        {{ movement_type }}
+    </button>
+
+    <a class="button" href="{% url 'product_list' %}">
+        Cancel
+    </a>
+
+</form>
+
+{% endblock %}

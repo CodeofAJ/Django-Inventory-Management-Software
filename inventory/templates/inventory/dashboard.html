@@ -1,0 +1,569 @@
+{% extends "inventory/base.html" %}
+
+{% block title %}
+Dashboard
+{% endblock %}
+
+{% block content %}
+
+<div class="dashboard">
+
+    <!-- =====================================
+         HEADER
+         ===================================== -->
+
+    <div class="dashboard-header">
+
+        <div>
+
+            <h1>
+                Dashboard
+            </h1>
+
+            <p>
+                Overview of your inventory
+            </p>
+
+        </div>
+
+        <div>
+
+            <a
+                href="{% url 'product_create' %}"
+                class="dashboard-button"
+            >
+                + Add Product
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================
+         STATISTICS
+         ===================================== -->
+
+    <div class="stats-grid">
+
+
+        <!-- Products -->
+
+        <div class="stat-card">
+
+            <div class="stat-card-content">
+
+                <p class="stat-label">
+                    Total Products
+                </p>
+
+                <h2>
+                    {{ total_products }}
+                </h2>
+
+            </div>
+
+            <div class="stat-icon">
+                📦
+            </div>
+
+        </div>
+
+
+        <!-- Low Stock -->
+
+        <div class="stat-card">
+
+            <div class="stat-card-content">
+
+                <p class="stat-label">
+                    Low Stock
+                </p>
+
+                <h2>
+                    {{ low_stock_count }}
+                </h2>
+
+            </div>
+
+            <div class="stat-icon">
+                ⚠️
+            </div>
+
+        </div>
+
+
+        <!-- Customers -->
+
+        <div class="stat-card">
+
+            <div class="stat-card-content">
+
+                <p class="stat-label">
+                    Customers
+                </p>
+
+                <h2>
+                    {{ total_customers }}
+                </h2>
+
+            </div>
+
+            <div class="stat-icon">
+                👥
+            </div>
+
+        </div>
+
+
+        <!-- Pending Sales -->
+
+        <div class="stat-card">
+
+            <div class="stat-card-content">
+
+                <p class="stat-label">
+                    Pending Sales
+                </p>
+
+                <h2>
+                    {{ pending_sales }}
+                </h2>
+
+            </div>
+
+            <div class="stat-icon">
+                🛒
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- =====================================
+         SALES SUMMARY
+         ===================================== -->
+
+    <div class="dashboard-grid">
+
+
+        <div class="dashboard-card">
+
+            <div class="card-header">
+
+                <div>
+
+                    <h2>
+                        Today's Sales
+                    </h2>
+
+                    <p>
+                        Confirmed sales today
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="sales-total">
+
+                ₹{{ todays_sales }}
+
+            </div>
+
+        </div>
+
+
+        <div class="dashboard-card">
+
+            <div class="card-header">
+
+                <div>
+
+                    <h2>
+                        Sales Overview
+                    </h2>
+
+                    <p>
+                        Current sales status
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="sales-overview">
+
+                <div>
+
+                    <span>
+                        Pending
+                    </span>
+
+                    <strong>
+                        {{ pending_sales }}
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        Confirmed
+                    </span>
+
+                    <strong>
+                        {{ confirmed_sales }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- =====================================
+         RECENT SALES + LOW STOCK
+         ===================================== -->
+
+    <div class="dashboard-grid">
+
+
+        <!-- Recent Sales -->
+
+        <div class="dashboard-card">
+
+            <div class="card-header">
+
+                <div>
+
+                    <h2>
+                        Recent Sales
+                    </h2>
+
+                    <p>
+                        Latest sales orders
+                    </p>
+
+                </div>
+
+                <a
+                    href="{% url 'sales_order_list' %}"
+                    class="table-action"
+                >
+                    View All
+                </a>
+
+            </div>
+
+
+            <div class="table-wrapper">
+
+                <table class="dashboard-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Order
+                            </th>
+
+                            <th>
+                                Customer
+                            </th>
+
+                            <th>
+                                Total
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for sale in recent_sales %}
+
+                        <tr>
+
+                            <td>
+
+                                <a
+                                    href="{% url 'sales_order_detail' sale.id %}"
+                                    class="table-action"
+                                >
+                                    {{ sale.order_number }}
+                                </a>
+
+                            </td>
+
+                            <td>
+                                {{ sale.customer.name }}
+                            </td>
+
+                            <td>
+                                ₹{{ sale.total_amount }}
+                            </td>
+
+                            <td>
+                                {{ sale.get_status_display }}
+                            </td>
+
+                        </tr>
+
+                        {% empty %}
+
+                        <tr>
+
+                            <td colspan="4">
+                                No sales yet.
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+        <!-- Low Stock -->
+
+        <div class="dashboard-card">
+
+            <div class="card-header">
+
+                <div>
+
+                    <h2>
+                        Low Stock
+                    </h2>
+
+                    <p>
+                        Products requiring attention
+                    </p>
+
+                </div>
+
+                <a
+                    href="{% url 'product_list' %}"
+                    class="table-action"
+                >
+                    View All
+                </a>
+
+            </div>
+
+
+            <div class="table-wrapper">
+
+                <table class="dashboard-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Product
+                            </th>
+
+                            <th>
+                                Stock
+                            </th>
+
+                            <th>
+                                Minimum
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for product in low_stock_products %}
+
+                        <tr>
+
+                            <td>
+                                {{ product.name }}
+                            </td>
+
+                            <td>
+
+                                <strong>
+                                    {{ product.quantity }}
+                                </strong>
+
+                            </td>
+
+                            <td>
+                                {{ product.minimum_stock }}
+                            </td>
+
+                        </tr>
+
+                        {% empty %}
+
+                        <tr>
+
+                            <td colspan="3">
+
+                                🎉
+
+                                All products have
+                                sufficient stock.
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- =====================================
+         RECENT STOCK MOVEMENTS
+         ===================================== -->
+
+    <div class="dashboard-card">
+
+        <div class="card-header">
+
+            <div>
+
+                <h2>
+                    Recent Stock Movements
+                </h2>
+
+                <p>
+                    Latest inventory changes
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+            <table class="dashboard-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Product
+                        </th>
+
+                        <th>
+                            Type
+                        </th>
+
+                        <th>
+                            Quantity
+                        </th>
+
+                        <th>
+                            Previous
+                        </th>
+
+                        <th>
+                            New
+                        </th>
+
+                        <th>
+                            Reason
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for movement in recent_movements %}
+
+                    <tr>
+
+                        <td>
+                            {{ movement.product.name }}
+                        </td>
+
+                        <td>
+                            {{ movement.movement_type }}
+                        </td>
+
+                        <td>
+                            {{ movement.quantity }}
+                        </td>
+
+                        <td>
+                            {{ movement.previous_quantity }}
+                        </td>
+
+                        <td>
+                            {{ movement.new_quantity }}
+                        </td>
+
+                        <td>
+                            {{ movement.reason|default:"-" }}
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td colspan="6">
+                            No stock movements yet.
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

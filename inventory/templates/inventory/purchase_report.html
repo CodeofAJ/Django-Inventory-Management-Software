@@ -1,0 +1,443 @@
+{% extends "inventory/base.html" %}
+
+{% block title %}
+Purchase Report
+{% endblock %}
+
+{% block content %}
+
+<div class="dashboard">
+
+    <!-- Header -->
+
+    <div class="dashboard-header">
+
+        <div>
+
+            <h1>
+                Purchase Report
+            </h1>
+
+            <p>
+                Overview of purchase orders and purchasing activity
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- Statistics -->
+
+    <div class="dashboard-grid">
+
+        <div class="dashboard-card">
+
+            <h3>
+                Total Orders
+            </h3>
+
+            <h2>
+                {{ total_orders }}
+            </h2>
+
+        </div>
+
+
+        <div class="dashboard-card">
+
+            <h3>
+                Pending
+            </h3>
+
+            <h2>
+                {{ pending_orders }}
+            </h2>
+
+        </div>
+
+
+        <div class="dashboard-card">
+
+            <h3>
+                Received
+            </h3>
+
+            <h2>
+                {{ received_orders }}
+            </h2>
+
+        </div>
+
+
+        <div class="dashboard-card">
+
+            <h3>
+                Cancelled
+            </h3>
+
+            <h2>
+                {{ cancelled_orders }}
+            </h2>
+
+        </div>
+
+
+        <div class="dashboard-card">
+
+            <h3>
+                Total Purchase Value
+            </h3>
+
+            <h2>
+                ₹{{ total_purchase_value|floatformat:2 }}
+            </h2>
+
+        </div>
+
+    </div>
+
+
+    <br>
+
+
+    <!-- Filters -->
+
+    <div class="dashboard-card">
+
+        <div style="padding: 20px;">
+
+            <form method="GET">
+
+                <!-- Search -->
+
+                <input
+                    type="text"
+                    name="search"
+                    placeholder="Search PO or supplier..."
+                    value="{{ search }}"
+                >
+
+
+                <!-- Status -->
+
+                <select name="status">
+
+                    <option value="">
+                        All Status
+                    </option>
+
+                    <option
+                        value="PENDING"
+                        {% if status == "PENDING" %}
+                            selected
+                        {% endif %}
+                    >
+                        Pending
+                    </option>
+
+                    <option
+                        value="RECEIVED"
+                        {% if status == "RECEIVED" %}
+                            selected
+                        {% endif %}
+                    >
+                        Received
+                    </option>
+
+                    <option
+                        value="CANCELLED"
+                        {% if status == "CANCELLED" %}
+                            selected
+                        {% endif %}
+                    >
+                        Cancelled
+                    </option>
+
+                </select>
+
+
+                <!-- From Date -->
+
+                <label>
+                    From:
+                </label>
+
+                <input
+                    type="date"
+                    name="date_from"
+                    value="{{ date_from }}"
+                >
+
+
+                <!-- To Date -->
+
+                <label>
+                    To:
+                </label>
+
+                <input
+                    type="date"
+                    name="date_to"
+                    value="{{ date_to }}"
+                >
+
+
+                <button
+                    type="submit"
+                    class="dashboard-button"
+                >
+                    Filter
+                </button>
+
+
+                <a
+                    href="{% url 'purchase_report' %}"
+                    class="button"
+                >
+                    Clear
+                </a>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <br>
+
+
+    <!-- Purchase Table -->
+
+    <div class="dashboard-card">
+
+        <div class="card-header">
+
+            <div>
+
+                <h2>
+                    Purchase Orders
+                </h2>
+
+                <p>
+                    Purchase order summary
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+            <table class="dashboard-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            PO Number
+                        </th>
+
+                        <th>
+                            Supplier
+                        </th>
+
+                        <th>
+                            Date
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                        <th>
+                            Items
+                        </th>
+
+                        <th>
+                            Total
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for order in page_obj %}
+
+                    <tr>
+
+                        <td>
+
+                            <strong>
+                                {{ order.order_number }}
+                            </strong>
+
+                        </td>
+
+
+                        <td>
+                            {{ order.supplier.name }}
+                        </td>
+
+
+                        <td>
+                            {{ order.order_date|date:"d M Y" }}
+                        </td>
+
+
+                        <td>
+
+                            {% if order.status == "PENDING" %}
+
+                                Pending
+
+                            {% elif order.status == "RECEIVED" %}
+
+                                Received
+
+                            {% elif order.status == "CANCELLED" %}
+
+                                Cancelled
+
+                            {% else %}
+
+                                {{ order.status }}
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td>
+
+                            {{ order.items.count }}
+
+                        </td>
+
+
+                        <td>
+
+                            ₹
+
+                            {% widthratio 1 1 0 %}
+
+                            {% with order_total=0 %}
+
+                                {% for item in order.items.all %}
+
+                                    {% if forloop.first %}
+                                        {% widthratio item.quantity 1 item.unit_price as item_total %}
+                                    {% endif %}
+
+                                {% endfor %}
+
+                            {% endwith %}
+
+                            <!-- Total is calculated below -->
+
+                            {% for item in order.items.all %}
+
+                                {% if forloop.first %}
+                                    ₹{{ item.total_price|floatformat:2 }}
+                                {% endif %}
+
+                            {% endfor %}
+
+                        </td>
+
+                    </tr>
+
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td colspan="6">
+
+                            No purchase orders found.
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- Pagination -->
+
+        <div
+            style="
+                display:flex;
+                justify-content:space-between;
+                align-items:center;
+                padding:20px;
+            "
+        >
+
+            <div>
+
+                {% if page_obj.has_previous %}
+
+                <a
+                    class="button"
+                    href="?page={{ page_obj.previous_page_number }}&search={{ search }}&status={{ status }}&date_from={{ date_from }}&date_to={{ date_to }}"
+                >
+                    ← Previous
+                </a>
+
+                {% endif %}
+
+            </div>
+
+
+            <div>
+
+                Page
+
+                <strong>
+                    {{ page_obj.number }}
+                </strong>
+
+                of
+
+                <strong>
+                    {{ page_obj.paginator.num_pages }}
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                {% if page_obj.has_next %}
+
+                <a
+                    class="button"
+                    href="?page={{ page_obj.next_page_number }}&search={{ search }}&status={{ status }}&date_from={{ date_from }}&date_to={{ date_to }}"
+                >
+                    Next →
+                </a>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

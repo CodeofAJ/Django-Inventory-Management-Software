@@ -1,0 +1,253 @@
+{% extends "inventory/base.html" %}
+
+{% block title %}
+Sale {{ sales_order.order_number }}
+{% endblock %}
+
+{% block content %}
+
+<div class="dashboard">
+
+    <div class="dashboard-header">
+
+        <div>
+
+            <h1>
+                {{ sales_order.order_number }}
+            </h1>
+
+            <p>
+                Sales Order Details
+            </p>
+
+        </div>
+
+        <div>
+
+            {% if sales_order.status == "PENDING" %}
+
+            <span class="status">
+                Pending
+            </span>
+
+            {% elif sales_order.status == "CONFIRMED" %}
+
+            <span class="status">
+                Confirmed
+            </span>
+
+            {% else %}
+
+            <span class="status">
+                {{ sales_order.get_status_display }}
+            </span>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+    {% if messages %}
+
+    {% for message in messages %}
+
+    <div class="form-errors">
+
+        {{ message }}
+
+    </div>
+
+    {% endfor %}
+
+    {% endif %}
+
+
+    <!-- Customer Information -->
+
+    <div class="dashboard-card">
+
+        <div class="form-section">
+
+            <h2>
+                Customer
+            </h2>
+
+            <p>
+                <strong>Name:</strong>
+                {{ sales_order.customer.name }}
+            </p>
+
+            <p>
+                <strong>Phone:</strong>
+                {{ sales_order.customer.phone|default:"-" }}
+            </p>
+
+            <p>
+                <strong>Email:</strong>
+                {{ sales_order.customer.email|default:"-" }}
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <br>
+
+
+    <!-- Products -->
+
+    <div class="dashboard-card">
+
+        <div class="form-section">
+
+            <h2>
+                Products
+            </h2>
+
+            <div class="table-wrapper">
+
+                <table class="dashboard-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Product
+                            </th>
+
+                            <th>
+                                SKU
+                            </th>
+
+                            <th>
+                                Quantity
+                            </th>
+
+                            <th>
+                                Unit Price
+                            </th>
+
+                            <th>
+                                Subtotal
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for item in items %}
+
+                        <tr>
+
+                            <td>
+                                {{ item.product.name }}
+                            </td>
+
+                            <td>
+                                {{ item.product.sku }}
+                            </td>
+
+                            <td>
+                                {{ item.quantity }}
+                            </td>
+
+                            <td>
+                                ₹{{ item.unit_price }}
+                            </td>
+
+                            <td>
+                                ₹{{ item.subtotal }}
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+        <div class="form-actions">
+
+            <strong>
+                Total:
+                ₹{{ sales_order.total_amount }}
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    <br>
+
+
+    <!-- Actions -->
+
+    <div class="dashboard-card">
+
+        <div class="form-actions">
+
+            <a href="{% url 'sales_order_list' %}" class="button secondary-button">
+                Back
+            </a>
+
+
+            {% if sales_order.status == "PENDING" %}
+
+            <form method="POST" action="{% url 'sales_order_confirm' sales_order.id %}">
+
+                {% csrf_token %}
+
+                <button type="submit" class="dashboard-button">
+                    Confirm Sale
+                </button>
+
+            </form>
+
+
+            <form method="POST" action="{% url 'sales_order_cancel' sales_order.id %}"
+                onsubmit="return confirm('Are you sure you want to cancel this sale?');">
+
+                {% csrf_token %}
+
+                <button type="submit" class="danger">
+                    Cancel Sale
+                </button>
+
+            </form>
+
+
+            {% elif sales_order.status == "CONFIRMED" %}
+
+            <span class="status">
+                Sale Confirmed
+            </span>
+
+
+            {% elif sales_order.status == "CANCELLED" %}
+
+            <span class="status">
+                Sale Cancelled
+            </span>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

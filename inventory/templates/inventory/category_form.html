@@ -1,0 +1,27 @@
+{% extends "inventory/base.html" %}
+
+{% block title %}
+Category
+{% endblock %}
+
+{% block content %}
+
+{% if form.instance.pk %}
+    <h1>Edit Category</h1>
+{% else %}
+    <h1>Add Category</h1>
+{% endif %}
+
+<form method="POST">
+
+    {% csrf_token %}
+
+    {{ form.as_p }}
+
+    <button type="submit">
+        Save Category
+    </button>
+
+</form>
+
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends "inventory/base.html" %}
+
+{% block title %}
+Add Product
+{% endblock %}
+
+{% block content %}
+
+<h1>
+    Add Product to
+    {{ purchase_order.order_number }}
+</h1>
+
+<form method="POST">
+
+    {% csrf_token %}
+
+    {{ form.as_p }}
+
+    <button type="submit">
+        Add Product
+    </button>
+
+</form>
+
+<br>
+
+<a
+    class="button"
+    href="{% url 'purchase_order_detail' purchase_order.id %}"
+>
+    Cancel
+</a>
+
+{% endblock %}

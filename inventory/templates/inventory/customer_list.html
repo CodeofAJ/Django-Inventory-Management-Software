@@ -1,0 +1,119 @@
+{% extends "inventory/base.html" %}
+
+{% block title %}
+Customers
+{% endblock %}
+
+{% block content %}
+
+<h1>Customers</h1>
+
+<a
+    class="button"
+    href="{% url 'customer_create' %}"
+>
+    + Add Customer
+</a>
+
+<br>
+<br>
+
+<form method="GET">
+
+    <input
+        type="text"
+        name="search"
+        placeholder="Search customer..."
+        value="{{ search }}"
+    >
+
+    <button type="submit">
+        Search
+    </button>
+
+    <a
+        class="button"
+        href="{% url 'customer_list' %}"
+    >
+        Clear
+    </a>
+
+</form>
+
+<br>
+
+<table>
+
+    <thead>
+
+        <tr>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th>Address</th>
+            <th>Actions</th>
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+        {% for customer in customers %}
+
+        <tr>
+
+            <td>
+                <strong>
+                    {{ customer.name }}
+                </strong>
+            </td>
+
+            <td>
+                {{ customer.phone|default:"-" }}
+            </td>
+
+            <td>
+                {{ customer.email|default:"-" }}
+            </td>
+
+            <td>
+                {{ customer.address|default:"-" }}
+            </td>
+
+            <td>
+
+                <a
+                    class="button"
+                    href="{% url 'customer_update' customer.id %}"
+                >
+                    Edit
+                </a>
+
+                <a
+                    class="button"
+                    href="{% url 'customer_delete' customer.id %}"
+                >
+                    Delete
+                </a>
+
+            </td>
+
+        </tr>
+
+        {% empty %}
+
+        <tr>
+
+            <td colspan="5">
+                No customers found.
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+    </tbody>
+
+</table>
+
+{% endblock %}

@@ -1,0 +1,350 @@
+{% extends "inventory/base.html" %}
+
+{% block title %}
+Stock Movement Report
+{% endblock %}
+
+{% block content %}
+
+<div class="dashboard">
+
+    <!-- Header -->
+
+    <div class="dashboard-header">
+
+        <div>
+
+            <h1>
+                Stock Movement Report
+            </h1>
+
+            <p>
+                Track all stock entering and leaving the inventory
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- Filters -->
+
+    <div class="dashboard-card">
+
+        <div style="padding: 20px;">
+
+            <form method="GET">
+
+                <!-- Search -->
+
+                <input
+                    type="text"
+                    name="search"
+                    placeholder="Search product or SKU..."
+                    value="{{ search }}"
+                >
+
+
+                <!-- Movement Type -->
+
+                <select name="movement_type">
+
+                    <option value="">
+                        All Movements
+                    </option>
+
+                    <option
+                        value="IN"
+                        {% if movement_type == "IN" %}
+                            selected
+                        {% endif %}
+                    >
+                        Stock In
+                    </option>
+
+                    <option
+                        value="OUT"
+                        {% if movement_type == "OUT" %}
+                            selected
+                        {% endif %}
+                    >
+                        Stock Out
+                    </option>
+
+                </select>
+
+
+                <!-- From Date -->
+
+                <label>
+                    From:
+                </label>
+
+                <input
+                    type="date"
+                    name="date_from"
+                    value="{{ date_from }}"
+                >
+
+
+                <!-- To Date -->
+
+                <label>
+                    To:
+                </label>
+
+                <input
+                    type="date"
+                    name="date_to"
+                    value="{{ date_to }}"
+                >
+
+
+                <button
+                    type="submit"
+                    class="dashboard-button"
+                >
+                    Filter
+                </button>
+
+
+                <a
+                    href="{% url 'stock_movement_report' %}"
+                    class="button"
+                >
+                    Clear
+                </a>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <br>
+
+
+    <!-- Report Table -->
+
+    <div class="dashboard-card">
+
+        <div class="card-header">
+
+            <div>
+
+                <h2>
+                    Stock Movements
+                </h2>
+
+                <p>
+                    Inventory movement history
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+            <table class="dashboard-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Date
+                        </th>
+
+                        <th>
+                            Product
+                        </th>
+
+                        <th>
+                            SKU
+                        </th>
+
+                        <th>
+                            Type
+                        </th>
+
+                        <th>
+                            Previous
+                        </th>
+
+                        <th>
+                            Quantity
+                        </th>
+
+                        <th>
+                            New Stock
+                        </th>
+
+                        <th>
+                            Reason
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for movement in page_obj %}
+
+                    <tr>
+
+                        <td>
+                            {{ movement.created_at|date:"d M Y, H:i" }}
+                        </td>
+
+
+                        <td>
+
+                            <strong>
+                                {{ movement.product.name }}
+                            </strong>
+
+                        </td>
+
+
+                        <td>
+                            {{ movement.product.sku }}
+                        </td>
+
+
+                        <td>
+
+                            {% if movement.movement_type == "IN" %}
+
+                                <span>
+                                    IN
+                                </span>
+
+                            {% elif movement.movement_type == "OUT" %}
+
+                                <span>
+                                    OUT
+                                </span>
+
+                            {% else %}
+
+                                {{ movement.movement_type }}
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td>
+                            {{ movement.previous_quantity }}
+                        </td>
+
+
+                        <td>
+                            {{ movement.quantity }}
+                        </td>
+
+
+                        <td>
+                            {{ movement.new_quantity }}
+                        </td>
+
+
+                        <td>
+                            {{ movement.reason|default:"-" }}
+                        </td>
+
+                    </tr>
+
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td colspan="8">
+
+                            No stock movements found.
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- Pagination -->
+
+        <div
+            style="
+                display:flex;
+                justify-content:space-between;
+                align-items:center;
+                padding:20px;
+            "
+        >
+
+            <div>
+
+                {% if page_obj.has_previous %}
+
+                <a
+                    class="button"
+                    href="?page={{ page_obj.previous_page_number }}&search={{ search }}&movement_type={{ movement_type }}&date_from={{ date_from }}&date_to={{ date_to }}"
+                >
+                    ← Previous
+                </a>
+
+                {% endif %}
+
+            </div>
+
+
+            <div>
+
+                Page
+
+                <strong>
+                    {{ page_obj.number }}
+                </strong>
+
+                of
+
+                <strong>
+                    {{ page_obj.paginator.num_pages }}
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                {% if page_obj.has_next %}
+
+                <a
+                    class="button"
+                    href="?page={{ page_obj.next_page_number }}&search={{ search }}&movement_type={{ movement_type }}&date_from={{ date_from }}&date_to={{ date_to }}"
+                >
+                    Next →
+                </a>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

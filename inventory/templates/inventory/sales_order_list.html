@@ -1,0 +1,153 @@
+{% extends "inventory/base.html" %}
+
+{% block title %}
+Sales Orders
+{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-header">
+
+    <div>
+
+        <h1>
+            Sales Orders
+        </h1>
+
+        <p>
+            Manage customer sales
+        </p>
+
+    </div>
+
+    <div>
+
+        <a class="dashboard-button" href="{% url 'sales_order_create' %}">
+            + New Sale
+        </a>
+
+    </div>
+
+</div>
+
+
+<form method="GET">
+
+    <input type="text" name="search" placeholder="Search order or customer..." value="{{ search }}">
+
+    <button type="submit">
+        Search
+    </button>
+
+    <a class="button" href="{% url 'sales_order_list' %}">
+        Clear
+    </a>
+
+</form>
+
+<br>
+
+
+<div class="dashboard-card">
+
+    <div class="table-wrapper">
+
+        <table class="dashboard-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Order Number
+                    </th>
+
+                    <th>
+                        Customer
+                    </th>
+
+                    <th>
+                        Status
+                    </th>
+
+                    <th>
+                        Total
+                    </th>
+
+                    <th>
+                        Date
+                    </th>
+
+                    <th>
+                        Action
+                    </th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for order in orders %}
+
+                <tr>
+
+                    <td>
+                        <strong>
+                            {{ order.order_number }}
+                        </strong>
+                    </td>
+
+                    <td>
+                        {{ order.customer.name }}
+                    </td>
+
+                    <td>
+
+                        <span class="status">
+
+                            {{ order.get_status_display }}
+
+                        </span>
+
+                    </td>
+
+                    <td>
+                        ₹{{ order.total_amount }}
+                    </td>
+
+                    <td>
+                        {{ order.order_date|date:"d M Y H:i" }}
+                    </td>
+
+                    <td>
+
+                        <a href="{% url 'sales_order_detail' order.id %}" class="table-action">
+                            View
+                        </a>
+
+                    </td>
+
+                </tr>
+
+                {% empty %}
+
+                <tr>
+
+                    <td colspan="6" class="empty-table">
+                        No sales orders found.
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}

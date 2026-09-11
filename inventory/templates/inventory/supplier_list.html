@@ -1,0 +1,295 @@
+{% extends "inventory/base.html" %}
+
+{% block title %}
+Suppliers
+{% endblock %}
+
+{% block content %}
+
+<div class="dashboard">
+
+    <!-- Header -->
+
+    <div class="dashboard-header">
+
+        <div>
+
+            <h1>
+                Suppliers
+            </h1>
+
+            <p>
+                Manage your inventory suppliers
+            </p>
+
+        </div>
+
+        <div>
+
+            <a
+                href="{% url 'supplier_create' %}"
+                class="dashboard-button"
+            >
+                + Add Supplier
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- Search -->
+
+    <div class="dashboard-card">
+
+        <div style="padding: 20px;">
+
+            <form method="GET">
+
+                <input
+                    type="text"
+                    name="search"
+                    placeholder="Search supplier..."
+                    value="{{ search }}"
+                >
+
+                <button
+                    type="submit"
+                    class="dashboard-button"
+                >
+                    Search
+                </button>
+
+                <a
+                    href="{% url 'supplier_list' %}"
+                    class="button"
+                >
+                    Clear
+                </a>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <br>
+
+
+    <!-- Supplier Table -->
+
+    <div class="dashboard-card">
+
+        <div class="card-header">
+
+            <div>
+
+                <h2>
+                    Supplier List
+                </h2>
+
+                <p>
+                    All registered suppliers
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+            <table class="dashboard-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Supplier
+                        </th>
+
+                        <th>
+                            Contact Person
+                        </th>
+
+                        <th>
+                            Phone
+                        </th>
+
+                        <th>
+                            Email
+                        </th>
+
+                        <th>
+                            Actions
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for supplier in page_obj %}
+
+                    <tr>
+
+                        <td>
+
+                            <strong>
+                                {{ supplier.name }}
+                            </strong>
+
+                        </td>
+
+
+                        <td>
+
+                            {{ supplier.contact_person|default:"-" }}
+
+                        </td>
+
+
+                        <td>
+
+                            {{ supplier.phone }}
+
+                        </td>
+
+
+                        <td>
+
+                            {{ supplier.email|default:"-" }}
+
+                        </td>
+
+
+                        <td>
+
+                            <a
+                                href="{% url 'supplier_update' supplier.id %}"
+                                class="button"
+                            >
+                                Edit
+                            </a>
+
+
+                            <form
+                                method="POST"
+                                action="{% url 'supplier_delete' supplier.id %}"
+                                style="display:inline;"
+                                onsubmit="return confirm('Are you sure you want to delete this supplier?');"
+                            >
+
+                                {% csrf_token %}
+
+                                <button
+                                    type="submit"
+                                    class="danger"
+                                >
+                                    Delete
+                                </button>
+
+                            </form>
+
+                        </td>
+
+                    </tr>
+
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td colspan="5">
+
+                            No suppliers found.
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- Pagination -->
+
+        <div
+            style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 20px;
+            "
+        >
+
+            <!-- Previous -->
+
+            <div>
+
+                {% if page_obj.has_previous %}
+
+                <a
+                    class="button"
+                    href="?page={{ page_obj.previous_page_number }}&search={{ search }}"
+                >
+                    ← Previous
+                </a>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- Page Number -->
+
+            <div>
+
+                Page
+
+                <strong>
+                    {{ page_obj.number }}
+                </strong>
+
+                of
+
+                <strong>
+                    {{ page_obj.paginator.num_pages }}
+                </strong>
+
+            </div>
+
+
+            <!-- Next -->
+
+            <div>
+
+                {% if page_obj.has_next %}
+
+                <a
+                    class="button"
+                    href="?page={{ page_obj.next_page_number }}&search={{ search }}"
+                >
+                    Next →
+                </a>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

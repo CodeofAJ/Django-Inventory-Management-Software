@@ -1,0 +1,100 @@
+{% extends "inventory/base.html" %}
+
+{% block title %}
+Login
+{% endblock %}
+
+{% block content %}
+
+<div
+    style="
+        max-width: 420px;
+        margin: 60px auto;
+    "
+>
+
+    <div class="dashboard-card">
+
+        <div style="padding: 30px;">
+
+            <h1>
+                Login
+            </h1>
+
+            <p>
+                Sign in to your Inventory Management System
+            </p>
+
+
+            {% if form.errors %}
+
+                <div
+                    style="
+                        padding: 12px;
+                        margin: 15px 0;
+                        border-radius: 6px;
+                    "
+                >
+
+                    Invalid username or password.
+
+                </div>
+
+            {% endif %}
+
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+
+                <div style="margin-bottom: 20px;">
+
+                    <label>
+                        Username
+                    </label>
+
+                    <input
+                        type="text"
+                        name="username"
+                        autocomplete="username"
+                        required
+                        style="width: 100%;"
+                    >
+
+                </div>
+
+
+                <div style="margin-bottom: 20px;">
+
+                    <label>
+                        Password
+                    </label>
+
+                    <input
+                        type="password"
+                        name="password"
+                        autocomplete="current-password"
+                        required
+                        style="width: 100%;"
+                    >
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="dashboard-button"
+                >
+                    Login
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

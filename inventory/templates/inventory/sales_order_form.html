@@ -1,0 +1,163 @@
+{% extends "inventory/base.html" %}
+
+{% block title %}
+New Sale
+{% endblock %}
+
+{% block content %}
+
+<div class="dashboard">
+
+    <div class="dashboard-header">
+
+        <div>
+
+            <h1>
+                New Sale
+            </h1>
+
+            <p>
+                Create a new sales order
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="dashboard-card">
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+
+            <!-- Customer -->
+
+            <div class="form-section">
+
+                <h2>
+                    Customer
+                </h2>
+
+                {{ order_form.customer.errors }}
+
+                <div class="form-field">
+
+                    <label>
+                        Customer
+                    </label>
+
+                    {{ order_form.customer }}
+
+                </div>
+
+            </div>
+
+
+            <hr>
+
+
+            <!-- Products -->
+
+            <div class="form-section">
+
+                <div class="card-header">
+
+                    <div>
+
+                        <h2>
+                            Products
+                        </h2>
+
+                        <p>
+                            Add products to this sale
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                {{ item_formset.management_form }}
+
+
+                <div class="sales-items">
+
+                    {% for form in item_formset %}
+
+                    <div class="sales-item">
+
+                        <div class="form-field">
+
+                            <label>
+                                Product
+                            </label>
+
+                            {{ form.product }}
+
+                            {{ form.product.errors }}
+
+                        </div>
+
+
+                        <div class="form-field">
+
+                            <label>
+                                Quantity
+                            </label>
+
+                            {{ form.quantity }}
+
+                            {{ form.quantity.errors }}
+
+                        </div>
+
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+
+            <hr>
+
+
+            {% if order_form.non_field_errors %}
+
+                <div class="form-errors">
+
+                    {{ order_form.non_field_errors }}
+
+                </div>
+
+            {% endif %}
+
+
+            <div class="form-actions">
+
+                <a
+                    class="button secondary-button"
+                    href="{% url 'sales_order_list' %}"
+                >
+                    Cancel
+                </a>
+
+                <button
+                    type="submit"
+                    class="dashboard-button"
+                >
+                    Create Sale
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

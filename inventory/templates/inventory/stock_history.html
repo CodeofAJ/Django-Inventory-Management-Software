@@ -1,0 +1,481 @@
+{% extends "inventory/base.html" %}
+
+{% block title %}
+Stock History
+{% endblock %}
+
+{% block content %}
+
+<div class="dashboard">
+
+    <!-- =========================================
+         PAGE HEADER
+         ========================================= -->
+
+    <div class="dashboard-header">
+
+        <div>
+
+            <h1>
+                Stock History
+            </h1>
+
+            <p>
+                Track all inventory stock movements
+            </p>
+
+        </div>
+
+        <div>
+
+            <a
+                href="{% url 'product_list' %}"
+                class="button"
+            >
+                Back to Products
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================
+         FILTERS
+         ========================================= -->
+
+    <div class="dashboard-card">
+
+        <div class="card-header">
+
+            <div>
+
+                <h2>
+                    Search & Filter
+                </h2>
+
+                <p>
+                    Find specific inventory movements
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div style="padding: 20px;">
+
+            <form method="GET">
+
+
+                <!-- Search -->
+
+                <div style="margin-bottom: 15px;">
+
+                    <label for="search">
+                        Product
+                    </label>
+
+                    <input
+                        type="text"
+                        id="search"
+                        name="search"
+                        placeholder="Search product..."
+                        value="{{ search }}"
+                    >
+
+                </div>
+
+
+                <!-- Movement Type -->
+
+                <div style="margin-bottom: 15px;">
+
+                    <label for="movement_type">
+                        Movement Type
+                    </label>
+
+                    <select
+                        id="movement_type"
+                        name="movement_type"
+                    >
+
+                        <option value="">
+                            All Movements
+                        </option>
+
+
+                        {% if movement_type == "IN" %}
+
+                            <option
+                                value="IN"
+                                selected
+                            >
+                                Stock In
+                            </option>
+
+                        {% else %}
+
+                            <option value="IN">
+                                Stock In
+                            </option>
+
+                        {% endif %}
+
+
+                        {% if movement_type == "OUT" %}
+
+                            <option
+                                value="OUT"
+                                selected
+                            >
+                                Stock Out
+                            </option>
+
+                        {% else %}
+
+                            <option value="OUT">
+                                Stock Out
+                            </option>
+
+                        {% endif %}
+
+                    </select>
+
+                </div>
+
+
+                <!-- Date From -->
+
+                <div style="margin-bottom: 15px;">
+
+                    <label for="date_from">
+                        From Date
+                    </label>
+
+                    <input
+                        type="date"
+                        id="date_from"
+                        name="date_from"
+                        value="{{ date_from }}"
+                    >
+
+                </div>
+
+
+                <!-- Date To -->
+
+                <div style="margin-bottom: 15px;">
+
+                    <label for="date_to">
+                        To Date
+                    </label>
+
+                    <input
+                        type="date"
+                        id="date_to"
+                        name="date_to"
+                        value="{{ date_to }}"
+                    >
+
+                </div>
+
+
+                <!-- Buttons -->
+
+                <div>
+
+                    <button
+                        type="submit"
+                        class="dashboard-button"
+                    >
+                        Filter
+                    </button>
+
+
+                    <a
+                        href="{% url 'stock_history' %}"
+                        class="button"
+                    >
+                        Clear
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <br>
+
+
+    <!-- =========================================
+         STOCK MOVEMENTS TABLE
+         ========================================= -->
+
+    <div class="dashboard-card">
+
+        <div class="card-header">
+
+            <div>
+
+                <h2>
+                    Inventory Movements
+                </h2>
+
+                <p>
+                    Complete stock movement history
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+            <table class="dashboard-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Product
+                        </th>
+
+                        <th>
+                            SKU
+                        </th>
+
+                        <th>
+                            Type
+                        </th>
+
+                        <th>
+                            Quantity
+                        </th>
+
+                        <th>
+                            Previous
+                        </th>
+
+                        <th>
+                            New
+                        </th>
+
+                        <th>
+                            Reason
+                        </th>
+
+                        <th>
+                            Date
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for movement in page_obj %}
+
+                    <tr>
+
+
+                        <!-- Product -->
+
+                        <td>
+
+                            <strong>
+                                {{ movement.product.name }}
+                            </strong>
+
+                        </td>
+
+
+                        <!-- SKU -->
+
+                        <td>
+
+                            {{ movement.product.sku }}
+
+                        </td>
+
+
+                        <!-- Movement Type -->
+
+                        <td>
+
+                            {% if movement.movement_type == "IN" %}
+
+                                <span class="status">
+                                    Stock In
+                                </span>
+
+                            {% elif movement.movement_type == "OUT" %}
+
+                                <span class="status">
+                                    Stock Out
+                                </span>
+
+                            {% else %}
+
+                                {{ movement.movement_type }}
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- Quantity -->
+
+                        <td>
+
+                            <strong>
+                                {{ movement.quantity }}
+                            </strong>
+
+                        </td>
+
+
+                        <!-- Previous Quantity -->
+
+                        <td>
+
+                            {{ movement.previous_quantity }}
+
+                        </td>
+
+
+                        <!-- New Quantity -->
+
+                        <td>
+
+                            {{ movement.new_quantity }}
+
+                        </td>
+
+
+                        <!-- Reason -->
+
+                        <td>
+
+                            {{ movement.reason|default:"-" }}
+
+                        </td>
+
+
+                        <!-- Date -->
+
+                        <td>
+
+                            {{ movement.created_at|date:"d M Y, H:i" }}
+
+                        </td>
+
+
+                    </tr>
+
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td colspan="8">
+
+                            No stock movements found.
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- =========================================
+             PAGINATION
+             ========================================= -->
+
+        <div
+            style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 20px;
+            "
+        >
+
+
+            <!-- Previous -->
+
+            <div>
+
+                {% if page_obj.has_previous %}
+
+                    <a
+                        class="button"
+                        href="?page={{ page_obj.previous_page_number }}&search={{ search }}&movement_type={{ movement_type }}&date_from={{ date_from }}&date_to={{ date_to }}"
+                    >
+                        ← Previous
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- Page Number -->
+
+            <div>
+
+                <span>
+
+                    Page
+                    <strong>
+                        {{ page_obj.number }}
+                    </strong>
+                    of
+                    <strong>
+                        {{ page_obj.paginator.num_pages }}
+                    </strong>
+
+                </span>
+
+            </div>
+
+
+            <!-- Next -->
+
+            <div>
+
+                {% if page_obj.has_next %}
+
+                    <a
+                        class="button"
+                        href="?page={{ page_obj.next_page_number }}&search={{ search }}&movement_type={{ movement_type }}&date_from={{ date_from }}&date_to={{ date_to }}"
+                    >
+                        Next →
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

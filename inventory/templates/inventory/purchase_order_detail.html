@@ -1,0 +1,118 @@
+{% extends "inventory/base.html" %}
+
+{% block title %}
+Purchase Order
+{% endblock %}
+
+{% block content %}
+
+<h1>Purchase Order {{ purchase_order.order_number }}</h1>
+
+<p>
+    Supplier:
+    <strong>{{ purchase_order.supplier.name }}</strong>
+</p>
+
+<p>
+    Status:
+    <strong>{{ purchase_order.get_status_display }}</strong>
+</p>
+
+<p>
+    Order Date:
+    {{ purchase_order.order_date }}
+</p>
+
+{% if purchase_order.notes %}
+
+<p>
+    Notes:
+    {{ purchase_order.notes }}
+</p>
+
+{% endif %}
+
+<hr>
+
+<h2>Items</h2>
+
+{% if purchase_order.status == "PENDING" %}
+
+<a
+    class="button"
+    href="{% url 'purchase_order_item_create' purchase_order.id %}"
+>
+    Add Product
+</a>
+
+{% endif %}
+
+<br>
+<br>
+
+<table>
+
+    <tr>
+        <th>Product</th>
+        <th>SKU</th>
+        <th>Quantity</th>
+        <th>Unit Price</th>
+        <th>Total</th>
+    </tr>
+
+    {% for item in items %}
+
+    <tr>
+
+        <td>
+            {{ item.product.name }}
+        </td>
+
+        <td>
+            {{ item.product.sku }}
+        </td>
+
+        <td>
+            {{ item.quantity }}
+        </td>
+
+        <td>
+            ₹{{ item.unit_price }}
+        </td>
+
+        <td>
+            ₹{{ item.total_price }}
+        </td>
+
+    </tr>
+
+    {% empty %}
+
+    <tr>
+
+        <td colspan="5">
+            No products added.
+        </td>
+
+    </tr>
+
+    {% endfor %}
+
+</table>
+
+<br>
+
+<h2>
+    Total: ₹{{ total }}
+</h2>
+
+<br>
+
+<a
+    class="button"
+    href="{% url 'purchase_order_list' %}"
+>
+    Back to Purchase Orders
+</a>
+
+{% endblock %}

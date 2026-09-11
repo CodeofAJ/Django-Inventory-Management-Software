@@ -1,0 +1,66 @@
+{% extends "inventory/base.html" %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block content %}
+
+<div class="dashboard">
+
+    <div class="dashboard-header">
+
+        <div>
+
+            <h1>
+                {{ title }}
+            </h1>
+
+            <p>
+                Enter supplier information
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="dashboard-card">
+
+        <div style="padding:25px;">
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+                {{ form.as_p }}
+
+
+                <div style="margin-top:20px;">
+
+                    <button
+                        type="submit"
+                        class="dashboard-button"
+                    >
+                        Save Supplier
+                    </button>
+
+
+                    <a
+                        href="{% url 'supplier_list' %}"
+                        class="button"
+                    >
+                        Cancel
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,189 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>
+        {% block title %}IMS{% endblock %}
+    </title>
+
+    <link rel="stylesheet" href="{% static 'inventory/css/style.css' %}">
+
+</head>
+
+<body>
+
+    <div class="app">
+
+        <!-- Sidebar -->
+
+        <aside class="sidebar">
+
+            <div class="sidebar-header">
+
+                <h2> NEBULA IMS </h2>
+
+                <span>
+                    Inventory Management
+                </span>
+
+            </div>
+
+
+            <nav class="sidebar-nav">
+
+                <!-- Dashboard -->
+
+                <div class="nav-section">
+
+                    <div class="nav-title">
+                        MAIN
+                    </div>
+
+                    <a href="{% url 'dashboard' %}" class="nav-link">
+                        Dashboard
+                    </a>
+
+                </div>
+
+
+                <!-- Inventory -->
+
+                <div class="nav-section">
+
+                    <div class="nav-title">
+                        INVENTORY
+                    </div>
+
+                    <a href="{% url 'product_list' %}" class="nav-link">
+                        Products
+                    </a>
+
+                    <a href="{% url 'category_list' %}" class="nav-link">
+                        Categories
+                    </a>
+
+                </div>
+
+
+                <!-- Purchasing -->
+
+                <div class="nav-section">
+
+                    <div class="nav-title">
+                        PURCHASING
+                    </div>
+
+                    <a href="{% url 'supplier_list' %}" class="nav-link">
+                        Suppliers
+                    </a>
+
+                    <a href="{% url 'purchase_order_list' %}" class="nav-link">
+                        Purchase Orders
+                    </a>
+
+                </div>
+
+
+                <!-- Sales -->
+
+                <div class="nav-section">
+
+                    <div class="nav-title">
+                        SALES
+                    </div>
+
+                    <a href="{% url 'customer_list' %}" class="nav-link">
+                        Customers
+                    </a>
+
+                    <a href="{% url 'sales_order_list' %}" class="nav-link">
+                        Sales Orders
+                    </a>
+
+                </div>
+
+
+                <!-- Reports -->
+
+                <div class="nav-section">
+
+                    <div class="nav-title">
+                        REPORTS
+                    </div>
+
+                    <a href="{% url 'inventory_report' %}" class="nav-link">
+                        Reports
+                    </a>
+                    <a href="{% url 'stock_movement_report' %}" class="nav-link">
+                        Stock Movement
+                    </a>
+
+                    <a href="{% url 'purchase_report' %}" class="nav-link">
+                        Purchase Report
+                    </a>
+                    <a href="{% url 'sales_report' %}" class="nav-link">
+                        Sales Report
+                    </a>
+                    <a href="{% url 'low_stock_report' %}" class="nav-link">
+                        Low Stock Reports
+                    </a>
+                </div>
+
+            </nav>
+
+            
+
+
+            <!-- Sidebar Footer -->
+
+            <div class="sidebar-footer">
+
+                <a href="/admin/" class="nav-link">
+                    Admin
+                </a>
+
+            </div>
+
+        </aside>
+  
+        
+
+        <!-- Main Area -->
+
+        <main class="main">
+
+            <header class="topbar">
+
+                <div>
+
+                    <h3>
+                        Inventory Management System
+                    </h3>
+
+                </div>
+
+            </header>
+
+
+            <section class="content">
+
+                {% block content %}
+
+                {% endblock %}
+
+            </section>
+
+        </main>
+
+    </div>
+
+</body>
+
+</html>

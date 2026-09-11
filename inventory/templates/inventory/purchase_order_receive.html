@@ -1,0 +1,84 @@
+{% extends "inventory/base.html" %}
+
+{% block title %}
+Receive Purchase Order
+{% endblock %}
+
+{% block content %}
+
+<h1>Receive Purchase Order</h1>
+
+<h2>
+    {{ purchase_order.order_number }}
+</h2>
+
+<p>
+    Supplier:
+    <strong>{{ purchase_order.supplier.name }}</strong>
+</p>
+
+<p>
+    Current Status:
+    <strong>{{ purchase_order.get_status_display }}</strong>
+</p>
+
+<hr>
+
+<h3>Items to Receive</h3>
+
+<table>
+
+    <tr>
+        <th>Product</th>
+        <th>SKU</th>
+        <th>Quantity</th>
+    </tr>
+
+    {% for item in purchase_order.items.all %}
+
+    <tr>
+
+        <td>
+            {{ item.product.name }}
+        </td>
+
+        <td>
+            {{ item.product.sku }}
+        </td>
+
+        <td>
+            {{ item.quantity }}
+        </td>
+
+    </tr>
+
+    {% endfor %}
+
+</table>
+
+<br>
+
+<p>
+    <strong>
+        Are you sure you want to receive this purchase order?
+    </strong>
+</p>
+
+<form method="POST">
+
+    {% csrf_token %}
+
+    <button type="submit">
+        Confirm Receive
+    </button>
+
+    <a
+        class="button"
+        href="{% url 'purchase_order_detail' purchase_order.id %}"
+    >
+        Cancel
+    </a>
+
+</form>
+
+{% endblock %}

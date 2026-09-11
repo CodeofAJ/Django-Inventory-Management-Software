@@ -1,0 +1,23 @@
+{% extends "inventory/base.html" %}
+
+{% block title %}
+Create Purchase Order
+{% endblock %}
+
+{% block content %}
+
+<h1>Create Purchase Order</h1>
+
+<form method="POST">
+
+    {% csrf_token %}
+
+    {{ form.as_p }}
+
+    <button type="submit">
+        Create Purchase Order
+    </button>
+
+</form>
+
+{% endblock %}

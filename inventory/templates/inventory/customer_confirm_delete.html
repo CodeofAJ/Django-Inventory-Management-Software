@@ -1,0 +1,36 @@
+{% extends "inventory/base.html" %}
+
+{% block title %}
+Delete Customer
+{% endblock %}
+
+{% block content %}
+
+<h1>Delete Customer</h1>
+
+<p>
+    Are you sure you want to delete
+    <strong>{{ customer.name }}</strong>?
+</p>
+
+<form method="POST">
+
+    {% csrf_token %}
+
+    <button
+        type="submit"
+        class="danger"
+    >
+        Yes, Delete
+    </button>
+
+    <a
+        class="button"
+        href="{% url 'customer_list' %}"
+    >
+        Cancel
+    </a>
+
+</form>
+
+{% endblock %}

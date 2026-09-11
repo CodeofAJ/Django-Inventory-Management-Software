@@ -1,0 +1,30 @@
+{% extends "inventory/base.html" %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block content %}
+
+<h1>{{ title }}</h1>
+
+<form method="POST">
+
+    {% csrf_token %}
+
+    {{ form.as_p }}
+
+    <button type="submit">
+        Save Customer
+    </button>
+
+    <a
+        class="button"
+        href="{% url 'customer_list' %}"
+    >
+        Cancel
+    </a>
+
+</form>
+
+{% endblock %}

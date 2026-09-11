@@ -1,0 +1,231 @@
+{% extends "inventory/base.html" %}
+
+{% block title %}
+Products
+{% endblock %}
+
+{% block content %}
+
+<h1>Products</h1>
+
+<a class="button" href="{% url 'product_create' %}">
+    Add Product
+</a>
+
+<br><br>
+
+
+<!-- Search & Filters -->
+
+<form method="GET">
+
+    <input
+        type="text"
+        name="search"
+        placeholder="Search product or SKU..."
+        value="{{ search }}"
+    >
+
+    <select name="category">
+
+        <option value="">
+            All Categories
+        </option>
+
+        {% for category in categories %}
+
+        <option
+            value="{{ category.id }}"
+            {% if selected_category == category.id|stringformat:"s" %}
+                selected
+            {% endif %}
+        >
+            {{ category.name }}
+        </option>
+
+        {% endfor %}
+
+    </select>
+
+
+    <label>
+
+        <input
+            type="checkbox"
+            name="low_stock"
+            value="1"
+            {% if low_stock == "1" %}
+                checked
+            {% endif %}
+        >
+
+        Low Stock Only
+
+    </label>
+
+
+    <button type="submit">
+        Search
+    </button>
+
+    <a
+        class="button"
+        href="{% url 'product_list' %}"
+    >
+        Clear
+    </a>
+
+</form>
+
+<br>
+
+
+<!-- Products table -->
+
+<table>
+
+    <tr>
+        <th>Name</th>
+        <th>SKU</th>
+        <th>Category</th>
+        <th>Price</th>
+        <th>Quantity</th>
+        <th>Minimum Stock</th>
+        <th>Actions</th>
+    </tr>
+
+
+    {% for product in page_obj %}
+
+    <tr>
+
+        <td>
+            {{ product.name }}
+        </td>
+
+        <td>
+            {{ product.sku }}
+        </td>
+
+        <td>
+            {{ product.category.name }}
+        </td>
+
+        <td>
+            ₹{{ product.price }}
+        </td>
+
+        <td>
+            {{ product.quantity }}
+        </td>
+
+        <td>
+            {{ product.minimum_stock }}
+        </td>
+
+        <td>
+
+            <a
+                class="button"
+                href="{% url 'product_update' product.id %}"
+            >
+                Edit
+            </a>
+
+            <a
+                class="button"
+                href="{% url 'stock_in' product.id %}"
+            >
+                Stock In
+            </a>
+
+            <a
+                class="button"
+                href="{% url 'stock_out' product.id %}"
+            >
+                Stock Out
+            </a>
+
+            <a
+                class="button"
+                href="{% url 'stock_history' product.id %}"
+            >
+                History
+            </a>
+
+            <form
+                method="POST"
+                action="{% url 'product_delete' product.id %}"
+                style="display:inline;"
+            >
+
+                {% csrf_token %}
+
+                <button
+                    type="submit"
+                    class="danger"
+                >
+                    Delete
+                </button>
+
+            </form>
+
+        </td>
+
+    </tr>
+
+
+    {% empty %}
+
+    <tr>
+
+        <td colspan="7">
+            No products found.
+        </td>
+
+    </tr>
+
+    {% endfor %}
+
+</table>
+
+
+<br>
+
+
+<!-- Pagination -->
+
+<div>
+
+    {% if page_obj.has_previous %}
+
+        <a
+            class="button"
+            href="?page={{ page_obj.previous_page_number }}&search={{ search }}&category={{ selected_category }}&low_stock={{ low_stock }}"
+        >
+            Previous
+        </a>
+
+    {% endif %}
+
+
+    <span>
+        Page {{ page_obj.number }}
+        of {{ page_obj.paginator.num_pages }}
+    </span>
+
+
+    {% if page_obj.has_next %}
+
+        <a
+            class="button"
+            href="?page={{ page_obj.next_page_number }}&search={{ search }}&category={{ selected_category }}&low_stock={{ low_stock }}"
+        >
+            Next
+        </a>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}
