@@ -194,6 +194,7 @@ class SalesOrder(models.Model):
         return self.order_number
     
 
+
 class SalesOrderItem(models.Model):
 
     sales_order = models.ForeignKey(
