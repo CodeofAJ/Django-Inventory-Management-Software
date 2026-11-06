@@ -1,189 +1,223 @@
+
 {% load static %}
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>
-        {% block title %}IMS{% endblock %}
-    </title>
+    <title>{% block title %}IMS{% endblock %}</title>
 
     <link rel="stylesheet" href="{% static 'inventory/css/style.css' %}">
-
 </head>
 
 <body>
 
-    <div class="app">
+<div class="app">
 
-        <!-- Sidebar -->
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
 
-        <aside class="sidebar">
+        <div class="sidebar-header">
+            <h2>AJ IMS</h2>
+            <span>Inventory Management</span>
+        </div>
 
-            <div class="sidebar-header">
+        <nav class="sidebar-nav">
 
-                <h2> AJ IMS </h2>
+            {% with current_url=request.resolver_match.url_name %}
 
-                <span>
-                    Inventory Management
-                </span>
+            <!-- Main -->
+            <div class="nav-section">
+                <div class="nav-title">MAIN</div>
 
+                <a href="{% url 'dashboard' %}"
+                   class="nav-link{% if current_url == 'dashboard' %} active{% endif %}"
+                   {% if current_url == 'dashboard' %}aria-current="page"{% endif %}>
+                    Dashboard
+                </a>
             </div>
 
+            <!-- Inventory -->
+            <div class="nav-section">
+                <div class="nav-title">INVENTORY</div>
 
-            <nav class="sidebar-nav">
-
-                <!-- Dashboard -->
-
-                <div class="nav-section">
-
-                    <div class="nav-title">
-                        MAIN
-                    </div>
-
-                    <a href="{% url 'dashboard' %}" class="nav-link">
-                        Dashboard
-                    </a>
-
-                </div>
-
-
-                <!-- Inventory -->
-
-                <div class="nav-section">
-
-                    <div class="nav-title">
-                        INVENTORY
-                    </div>
-
-                    <a href="{% url 'product_list' %}" class="nav-link">
-                        Products
-                    </a>
-
-                    <a href="{% url 'category_list' %}" class="nav-link">
-                        Categories
-                    </a>
-
-                </div>
-
-
-                <!-- Purchasing -->
-
-                <div class="nav-section">
-
-                    <div class="nav-title">
-                        PURCHASING
-                    </div>
-
-                    <a href="{% url 'supplier_list' %}" class="nav-link">
-                        Suppliers
-                    </a>
-
-                    <a href="{% url 'purchase_order_list' %}" class="nav-link">
-                        Purchase Orders
-                    </a>
-
-                </div>
-
-
-                <!-- Sales -->
-
-                <div class="nav-section">
-
-                    <div class="nav-title">
-                        SALES
-                    </div>
-
-                    <a href="{% url 'customer_list' %}" class="nav-link">
-                        Customers
-                    </a>
-
-                    <a href="{% url 'sales_order_list' %}" class="nav-link">
-                        Sales Orders
-                    </a>
-
-                </div>
-
-
-                <!-- Reports -->
-
-                <div class="nav-section">
-
-                    <div class="nav-title">
-                        REPORTS
-                    </div>
-
-                    <a href="{% url 'inventory_report' %}" class="nav-link">
-                        Reports
-                    </a>
-                    <a href="{% url 'stock_movement_report' %}" class="nav-link">
-                        Stock Movement
-                    </a>
-
-                    <a href="{% url 'purchase_report' %}" class="nav-link">
-                        Purchase Report
-                    </a>
-                    <a href="{% url 'sales_report' %}" class="nav-link">
-                        Sales Report
-                    </a>
-                    <a href="{% url 'low_stock_report' %}" class="nav-link">
-                        Low Stock Reports
-                    </a>
-                </div>
-
-            </nav>
-
-            
-
-
-            <!-- Sidebar Footer -->
-
-            <div class="sidebar-footer">
-
-                <a href="/admin/" class="nav-link">
-                    Admin
+                <a href="{% url 'product_list' %}"
+                   class="nav-link{% if current_url == 'product_list' %} active{% endif %}"
+                   {% if current_url == 'product_list' %}aria-current="page"{% endif %}>
+                    Products
                 </a>
 
+                <a href="{% url 'category_list' %}"
+                   class="nav-link{% if current_url == 'category_list' %} active{% endif %}"
+                   {% if current_url == 'category_list' %}aria-current="page"{% endif %}>
+                    Categories
+                </a>
             </div>
 
-        </aside>
-  
-        
+            <!-- Purchasing -->
+            <div class="nav-section">
+                <div class="nav-title">PURCHASING</div>
 
-        <!-- Main Area -->
+                <a href="{% url 'supplier_list' %}"
+                   class="nav-link{% if current_url == 'supplier_list' %} active{% endif %}"
+                   {% if current_url == 'supplier_list' %}aria-current="page"{% endif %}>
+                    Suppliers
+                </a>
 
-        <main class="main">
+                <a href="{% url 'purchase_order_list' %}"
+                   class="nav-link{% if current_url == 'purchase_order_list' %} active{% endif %}"
+                   {% if current_url == 'purchase_order_list' %}aria-current="page"{% endif %}>
+                    Purchase Orders
+                </a>
+            </div>
 
-            <header class="topbar">
+            <!-- Sales -->
+            <div class="nav-section">
+                <div class="nav-title">SALES</div>
 
-                <div>
+                <a href="{% url 'customer_list' %}"
+                   class="nav-link{% if current_url == 'customer_list' %} active{% endif %}"
+                   {% if current_url == 'customer_list' %}aria-current="page"{% endif %}>
+                    Customers
+                </a>
 
-                    <h3>
-                        Inventory Management System
-                    </h3>
+                <a href="{% url 'sales_order_list' %}"
+                   class="nav-link{% if current_url == 'sales_order_list' %} active{% endif %}"
+                   {% if current_url == 'sales_order_list' %}aria-current="page"{% endif %}>
+                    Sales Orders
+                </a>
+            </div>
 
-                </div>
+            <!-- Reports -->
+            <div class="nav-section">
+                <div class="nav-title">REPORTS</div>
 
-            </header>
+                <a href="{% url 'inventory_report' %}"
+                   class="nav-link{% if current_url == 'inventory_report' %} active{% endif %}"
+                   {% if current_url == 'inventory_report' %}aria-current="page"{% endif %}>
+                    Reports
+                </a>
 
+                <a href="{% url 'stock_movement_report' %}"
+                   class="nav-link{% if current_url == 'stock_movement_report' %} active{% endif %}"
+                   {% if current_url == 'stock_movement_report' %}aria-current="page"{% endif %}>
+                    Stock Movement
+                </a>
 
-            <section class="content">
+                <a href="{% url 'purchase_report' %}"
+                   class="nav-link{% if current_url == 'purchase_report' %} active{% endif %}"
+                   {% if current_url == 'purchase_report' %}aria-current="page"{% endif %}>
+                    Purchase Report
+                </a>
 
-                {% block content %}
+                <a href="{% url 'sales_report' %}"
+                   class="nav-link{% if current_url == 'sales_report' %} active{% endif %}"
+                   {% if current_url == 'sales_report' %}aria-current="page"{% endif %}>
+                    Sales Report
+                </a>
 
-                {% endblock %}
+                <a href="{% url 'low_stock_report' %}"
+                   class="nav-link{% if current_url == 'low_stock_report' %} active{% endif %}"
+                   {% if current_url == 'low_stock_report' %}aria-current="page"{% endif %}>
+                    Low Stock Reports
+                </a>
+            </div>
 
-            </section>
+            {% endwith %}
 
-        </main>
+        </nav>
 
-    </div>
+        <!-- Sidebar Footer -->
+        <div class="sidebar-footer">
+            <a href="/admin/"
+               class="nav-link{% if '/admin/' in request.path %} active{% endif %}">
+                Admin
+            </a>
+        </div>
+
+    </aside>
+
+    <!-- Mobile Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Main Area -->
+    <main class="main">
+
+        <header class="topbar">
+
+            <button
+                type="button"
+                class="sidebar-toggle"
+                id="sidebarToggle"
+                aria-label="Open navigation menu"
+                aria-controls="sidebar"
+                aria-expanded="false">
+                ☰
+            </button>
+
+            <div>
+                <h3>Inventory Management System</h3>
+            </div>
+
+        </header>
+
+        <section class="content">
+            {% block content %}
+            {% endblock %}
+        </section>
+
+    </main>
+
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const sidebar = document.getElementById("sidebar");
+        const toggle = document.getElementById("sidebarToggle");
+        const overlay = document.getElementById("sidebarOverlay");
+
+        function openSidebar() {
+            sidebar.classList.add("is-open");
+            overlay.classList.add("is-visible");
+            document.body.classList.add("sidebar-open");
+            toggle.setAttribute("aria-expanded", "true");
+            toggle.setAttribute("aria-label", "Close navigation menu");
+        }
+
+        function closeSidebar() {
+            sidebar.classList.remove("is-open");
+            overlay.classList.remove("is-visible");
+            document.body.classList.remove("sidebar-open");
+            toggle.setAttribute("aria-expanded", "false");
+            toggle.setAttribute("aria-label", "Open navigation menu");
+        }
+
+        toggle.addEventListener("click", function () {
+            if (sidebar.classList.contains("is-open")) {
+                closeSidebar();
+            } else {
+                openSidebar();
+            }
+        });
+
+        overlay.addEventListener("click", closeSidebar);
+
+        document.addEventListener("keydown", function (event) {
+            if (event.key === "Escape") {
+                closeSidebar();
+            }
+        });
+
+        // Close the mobile sidebar after selecting a navigation link.
+        sidebar.querySelectorAll(".nav-link").forEach(function (link) {
+            link.addEventListener("click", function () {
+                closeSidebar();
+            });
+        });
+    });
+</script>
 
 </body>
-
 </html>

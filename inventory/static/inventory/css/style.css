@@ -1323,3 +1323,491 @@ button {
     }
 
 }
+
+
+
+
+
+/* =========================================
+   IMS DASHBOARD - MODERN BLUE THEME
+   Primary Accent: #005b9c
+========================================= */
+
+:root {
+    --primary: #005b9c;
+    --primary-hover: #004777;
+    --primary-light: #eaf3fa;
+
+    --sidebar-bg: #171923;
+    --body-bg: #f5f7fb;
+    --card-bg: #ffffff;
+
+    --text-primary: #171923;
+    --text-secondary: #6b7280;
+
+    --border-color: #e5e7eb;
+
+    --success: #16a34a;
+    --warning: #f59e0b;
+    --danger: #dc2626;
+}
+
+/* Main background */
+
+body {
+    background: var(--body-bg);
+    color: var(--text-primary);
+}
+
+/* Sidebar */
+
+.sidebar {
+    background: var(--sidebar-bg);
+}
+
+/* Dashboard container */
+
+.dashboard {
+    max-width: 1600px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* Dashboard header */
+
+.dashboard-header {
+    margin-bottom: 0;
+}
+
+.dashboard-header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.5px;
+}
+
+.dashboard-header p {
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+/* Primary button */
+
+.dashboard-button {
+    background: var(--primary);
+    color: #ffffff;
+    border-radius: 8px;
+    padding: 11px 18px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.dashboard-button:hover {
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+}
+
+/* Statistics grid */
+
+.stats-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.stat-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 22px;
+    gap: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    transition: all 0.2s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+.stat-card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.stat-label {
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.stat-card h2 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 5px 0 0;
+}
+
+.stat-icon {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    border-radius: 10px;
+    background: var(--primary-light);
+    color: var(--primary);
+    font-size: 22px;
+}
+
+/* Dashboard cards */
+
+.dashboard-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.dashboard-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+/* Card headers */
+
+.card-header {
+    padding: 20px 22px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.card-header h2 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.card-header p {
+    color: var(--text-secondary);
+}
+
+/* Today's sales */
+
+.sales-total {
+    padding: 25px 22px;
+    font-size: 34px;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+/* Sales overview */
+
+.sales-overview {
+    padding: 25px 22px;
+}
+
+.sales-overview span {
+    color: var(--text-secondary);
+}
+
+.sales-overview strong {
+    font-size: 25px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+/* Dashboard tables */
+
+.dashboard-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.dashboard-table th {
+    background: #f4f7fb;
+    color: #4b5563;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 14px 20px;
+    white-space: nowrap;
+}
+
+.dashboard-table td {
+    padding: 15px 20px;
+    border-bottom: 1px solid #f0f2f5;
+    color: #4b5563;
+    font-size: 13px;
+}
+
+.dashboard-table tbody tr {
+    transition: background 0.2s ease;
+}
+
+.dashboard-table tbody tr:hover {
+    background: #f8fafc;
+}
+
+.dashboard-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Table links */
+
+.table-action {
+    color: var(--primary);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.table-action:hover {
+    color: var(--primary-hover);
+    text-decoration: underline;
+}
+
+/* Stock movement colors */
+
+.stock-in {
+    color: var(--success);
+}
+
+.stock-out {
+    color: var(--danger);
+}
+
+/* Low stock */
+
+.stock-level strong {
+    color: var(--danger);
+}
+
+/* Forms and focus */
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(0, 91, 156, 0.12);
+}
+
+/* Responsive dashboard */
+
+@media (max-width: 1100px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-header {
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .dashboard-header h1 {
+        font-size: 24px;
+    }
+
+    .dashboard-button {
+        margin: 0;
+    }
+
+    .dashboard-table {
+        min-width: 550px;
+    }
+
+    .sales-total {
+        font-size: 28px;
+    }
+}
+
+
+
+
+/* =========================================
+   SIDEBAR ACTIVE STATES & HOVER EFFECTS
+========================================= */
+
+.sidebar .nav-link {
+    position: relative;
+    display: flex;
+    align-items: center;
+    border-left: 3px solid transparent;
+    border-radius: 0 6px 6px 0;
+    transition: background-color 0.2s ease,
+                color 0.2s ease,
+                border-color 0.2s ease;
+}
+
+.sidebar .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+}
+
+.sidebar .nav-link.active {
+    background-color: rgba(0, 91, 156, 0.22);
+    color: #ffffff;
+    border-left-color: #005b9c;
+    font-weight: 600;
+}
+
+.sidebar .nav-link.active:hover {
+    background-color: rgba(0, 91, 156, 0.30);
+}
+
+
+/* =========================================
+   MOBILE SIDEBAR TOGGLE BUTTON
+========================================= */
+
+.sidebar-toggle {
+    display: none;
+    border: none;
+    background: transparent;
+    color: #005b9c;
+    font-size: 26px;
+    cursor: pointer;
+    padding: 4px 10px;
+    border-radius: 6px;
+}
+
+.sidebar-toggle:hover {
+    background-color: #eaf3fa;
+}
+
+.sidebar-overlay {
+    display: none;
+}
+
+
+/* =========================================
+   TABLET AND MOBILE RESPONSIVENESS
+========================================= */
+
+@media (max-width: 768px) {
+
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 260px;
+        height: 100vh;
+        z-index: 1001;
+        overflow-y: auto;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+    }
+
+    .sidebar.is-open {
+        transform: translateX(0);
+    }
+
+    .sidebar-overlay {
+        display: block;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.45);
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    .sidebar-overlay.is-visible {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    body.sidebar-open {
+        overflow: hidden;
+    }
+
+    .main {
+        margin-left: 0 !important;
+        width: 100% !important;
+        min-width: 0;
+    }
+
+    .sidebar-toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .topbar {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .content {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* Dashboard cards */
+    .stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-card {
+        min-width: 0;
+    }
+
+    /* Allow wide tables to scroll horizontally */
+    .dashboard-table {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+}
+
+
+/* =========================================
+   SMALL MOBILE SCREENS
+========================================= */
+
+@media (max-width: 480px) {
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard {
+        gap: 16px;
+    }
+
+    .dashboard-header {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .dashboard-header h1 {
+        font-size: 24px;
+    }
+
+    .dashboard-button {
+        width: 100%;
+        justify-content: center;
+        box-sizing: border-box;
+    }
+
+    .topbar h3 {
+        font-size: 16px;
+    }
+}
