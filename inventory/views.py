@@ -57,77 +57,77 @@ from reportlab.platypus import (
 # =========================
 
 
+# @login_required
+# def dashboard(request):
+
+#     # -----------------------------------------
+#     # BASIC COUNTS
+#     # -----------------------------------------
+
+#     total_products = Product.objects.count()
+
+#     total_customers = Customer.objects.count()
+
+#     total_suppliers = Supplier.objects.count()
+
+#     low_stock_products = Product.objects.filter(quantity__lte=F("minimum_stock"))
+
+#     low_stock_count = low_stock_products.count()
+
+#     pending_sales = SalesOrder.objects.filter(status="PENDING").count()
+
+#     confirmed_sales = SalesOrder.objects.filter(status="CONFIRMED").count()
+
+#     # -----------------------------------------
+#     # TODAY'S SALES
+#     # -----------------------------------------
+
+#     today = timezone.localdate()
+
+#     todays_sales = (
+#         SalesOrder.objects.filter(status="CONFIRMED", order_date__date=today).aggregate(
+#             total=Sum("total_amount")
+#         )["total"]
+#         or 0
+#     )
+
+#     # -----------------------------------------
+#     # RECENT SALES
+#     # -----------------------------------------
+
+#     recent_sales = SalesOrder.objects.select_related("customer").order_by(
+#         "-order_date"
+#     )[:5]
+
+#     # -----------------------------------------
+#     # RECENT STOCK MOVEMENTS
+#     # -----------------------------------------
+
+#     recent_movements = StockMovement.objects.select_related("product").order_by(
+#         "-created_at"
+#     )[:5]
+
+#     # -----------------------------------------
+#     # CONTEXT
+#     # -----------------------------------------
+
+#     context = {
+#         "total_products": total_products,
+#         "total_customers": total_customers,
+#         "total_suppliers": total_suppliers,
+#         "low_stock_count": low_stock_count,
+#         "low_stock_products": low_stock_products[:5],
+#         "pending_sales": pending_sales,
+#         "confirmed_sales": confirmed_sales,
+#         "todays_sales": todays_sales,
+#         "recent_sales": recent_sales,
+#         "recent_movements": recent_movements,
+#     }
+
+#     return render(request, "inventory/dashboard.html", context)
+
+
 @login_required
-def dashboard(request):
-
-    # -----------------------------------------
-    # BASIC COUNTS
-    # -----------------------------------------
-
-    total_products = Product.objects.count()
-
-    total_customers = Customer.objects.count()
-
-    total_suppliers = Supplier.objects.count()
-
-    low_stock_products = Product.objects.filter(quantity__lte=F("minimum_stock"))
-
-    low_stock_count = low_stock_products.count()
-
-    pending_sales = SalesOrder.objects.filter(status="PENDING").count()
-
-    confirmed_sales = SalesOrder.objects.filter(status="CONFIRMED").count()
-
-    # -----------------------------------------
-    # TODAY'S SALES
-    # -----------------------------------------
-
-    today = timezone.localdate()
-
-    todays_sales = (
-        SalesOrder.objects.filter(status="CONFIRMED", order_date__date=today).aggregate(
-            total=Sum("total_amount")
-        )["total"]
-        or 0
-    )
-
-    # -----------------------------------------
-    # RECENT SALES
-    # -----------------------------------------
-
-    recent_sales = SalesOrder.objects.select_related("customer").order_by(
-        "-order_date"
-    )[:5]
-
-    # -----------------------------------------
-    # RECENT STOCK MOVEMENTS
-    # -----------------------------------------
-
-    recent_movements = StockMovement.objects.select_related("product").order_by(
-        "-created_at"
-    )[:5]
-
-    # -----------------------------------------
-    # CONTEXT
-    # -----------------------------------------
-
-    context = {
-        "total_products": total_products,
-        "total_customers": total_customers,
-        "total_suppliers": total_suppliers,
-        "low_stock_count": low_stock_count,
-        "low_stock_products": low_stock_products[:5],
-        "pending_sales": pending_sales,
-        "confirmed_sales": confirmed_sales,
-        "todays_sales": todays_sales,
-        "recent_sales": recent_sales,
-        "recent_movements": recent_movements,
-    }
-
-    return render(request, "inventory/dashboard.html", context)
-
-
-
 def dashboard(request):
 
     # -----------------------------------------
