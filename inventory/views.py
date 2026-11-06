@@ -2,7 +2,11 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.contrib import messages
 from django.db import models, transaction
+from datetime import timedelta
+
+
 from django.db.models import Q, Sum, F, Count, DecimalField, ExpressionWrapper
+from django.db.models.functions import TruncDate
 from django.db.models.functions import Coalesce
 from django.utils import timezone
 from django.shortcuts import render, redirect, get_object_or_404
@@ -121,6 +125,207 @@ def dashboard(request):
     }
 
     return render(request, "inventory/dashboard.html", context)
+
+
+
+def dashboard(request):
+
+    # -----------------------------------------
+    # BASIC COUNTS
+    # -----------------------------------------
+
+    total_products = Product.objects.count()
+
+    total_customers = Customer.objects.count()
+
+    total_suppliers = Supplier.objects.count()
+
+    low_stock_products = Product.objects.filter(
+        quantity__lte=F("minimum_stock")
+    )
+
+    low_stock_count = low_stock_products.count()
+
+    pending_sales = SalesOrder.objects.filter(
+        status="PENDING"
+    ).count()
+
+    confirmed_sales = SalesOrder.objects.filter(
+        status="CONFIRMED"
+    ).count()
+
+
+    # -----------------------------------------
+    # TODAY'S SALES
+    # -----------------------------------------
+
+    today = timezone.localdate()
+
+    todays_sales = (
+        SalesOrder.objects.filter(
+            status="CONFIRMED",
+            order_date__date=today
+        ).aggregate(
+            total=Sum("total_amount")
+        )["total"] or 0
+    )
+
+
+    # -----------------------------------------
+    # RECENT SALES
+    # -----------------------------------------
+
+    recent_sales = (
+        SalesOrder.objects
+        .select_related("customer")
+        .order_by("-order_date")[:5]
+    )
+
+
+    # -----------------------------------------
+    # RECENT STOCK MOVEMENTS
+    # -----------------------------------------
+
+    recent_movements = (
+        StockMovement.objects
+        .select_related("product")
+        .order_by("-created_at")[:5]
+    )
+
+
+    # =========================================
+    # CHART 1: SALES TREND - LAST 7 DAYS
+    # =========================================
+
+    start_date = today - timedelta(days=6)
+
+    sales_by_date = (
+        SalesOrder.objects.filter(
+            status="CONFIRMED",
+            order_date__date__gte=start_date,
+            order_date__date__lte=today
+        )
+        .annotate(
+            sale_day=TruncDate("order_date")
+        )
+        .values("sale_day")
+        .annotate(
+            total=Sum("total_amount")
+        )
+        .order_by("sale_day")
+    )
+
+    # Convert query results into a date-to-revenue dictionary.
+    sales_lookup = {
+        item["sale_day"]: float(item["total"] or 0)
+        for item in sales_by_date
+    }
+
+    # Include dates with no sales as zero.
+    sales_chart_labels = []
+    sales_chart_data = []
+
+    for day_offset in range(7):
+
+        current_day = start_date + timedelta(days=day_offset)
+
+        sales_chart_labels.append(
+            current_day.strftime("%d %b")
+        )
+
+        sales_chart_data.append(
+            sales_lookup.get(current_day, 0)
+        )
+
+
+    # =========================================
+    # CHART 2: INVENTORY BY CATEGORY
+    # =========================================
+
+    categories = (
+        Category.objects
+        .annotate(
+            product_count=Count("products")
+        )
+        .order_by("name")
+    )
+
+    category_chart_labels = [
+        category.name for category in categories
+    ]
+
+    category_chart_data = [
+        category.product_count for category in categories
+    ]
+
+
+    # =========================================
+    # CHART 3: STOCK OVERVIEW
+    # =========================================
+
+    # Show the 8 products with the lowest stock.
+    stock_products = (
+        Product.objects
+        .select_related("category")
+        .order_by("quantity", "name")[:8]
+    )
+
+    stock_chart_labels = [
+        product.name for product in stock_products
+    ]
+
+    stock_chart_data = [
+        product.quantity for product in stock_products
+    ]
+
+    minimum_stock_chart_data = [
+        product.minimum_stock for product in stock_products
+    ]
+
+
+    # -----------------------------------------
+    # CONTEXT
+    # -----------------------------------------
+
+    context = {
+
+        # Basic statistics
+        "total_products": total_products,
+        "total_customers": total_customers,
+        "total_suppliers": total_suppliers,
+        "low_stock_count": low_stock_count,
+        "low_stock_products": low_stock_products[:5],
+
+        # Sales information
+        "pending_sales": pending_sales,
+        "confirmed_sales": confirmed_sales,
+        "todays_sales": todays_sales,
+
+        # Recent activity
+        "recent_sales": recent_sales,
+        "recent_movements": recent_movements,
+
+        # Sales chart
+        "sales_chart_labels": sales_chart_labels,
+        "sales_chart_data": sales_chart_data,
+
+        # Category chart
+        "category_chart_labels": category_chart_labels,
+        "category_chart_data": category_chart_data,
+
+        # Stock chart
+        "stock_chart_labels": stock_chart_labels,
+        "stock_chart_data": stock_chart_data,
+        "minimum_stock_chart_data": minimum_stock_chart_data,
+    }
+
+    return render(
+        request,
+        "inventory/dashboard.html",
+        context
+    )
+
+
 
 
 ########################### ALL REPORTS ###############################

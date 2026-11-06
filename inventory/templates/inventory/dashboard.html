@@ -6,171 +6,141 @@ Dashboard
 
 {% block content %}
 
+
 <div class="dashboard">
 
-    <!-- =====================================
-         HEADER
-         ===================================== -->
-
+    <!-- Dashboard Header -->
     <div class="dashboard-header">
-
         <div>
-
-            <h1>
-                Dashboard
-            </h1>
-
-            <p>
-                Overview of your inventory
-            </p>
-
+            <h1>Dashboard</h1>
+            <p>Overview of your inventory and business performance</p>
         </div>
 
-        <div>
-
-            <a
-                href="{% url 'product_create' %}"
-                class="dashboard-button"
-            >
-                + Add Product
-            </a>
-
-        </div>
-
+        <a href="{% url 'product_create' %}" class="dashboard-button">
+            + Add Product
+        </a>
     </div>
 
 
-    <!-- =====================================
-         STATISTICS
-         ===================================== -->
-
+    <!-- Statistics Cards -->
     <div class="stats-grid">
 
-
-        <!-- Products -->
-
         <div class="stat-card">
-
             <div class="stat-card-content">
-
-                <p class="stat-label">
-                    Total Products
-                </p>
-
-                <h2>
-                    {{ total_products }}
-                </h2>
-
+                <div>
+                    <p class="stat-label">Total Products</p>
+                    <h2>{{ total_products }}</h2>
+                </div>
+                <div class="stat-icon">📦</div>
             </div>
-
-            <div class="stat-icon">
-                📦
-            </div>
-
         </div>
 
-
-        <!-- Low Stock -->
-
         <div class="stat-card">
-
             <div class="stat-card-content">
-
-                <p class="stat-label">
-                    Low Stock
-                </p>
-
-                <h2>
-                    {{ low_stock_count }}
-                </h2>
-
+                <div>
+                    <p class="stat-label">Low Stock</p>
+                    <h2>{{ low_stock_count }}</h2>
+                </div>
+                <div class="stat-icon">⚠️</div>
             </div>
-
-            <div class="stat-icon">
-                ⚠️
-            </div>
-
         </div>
 
-
-        <!-- Customers -->
-
         <div class="stat-card">
-
             <div class="stat-card-content">
-
-                <p class="stat-label">
-                    Customers
-                </p>
-
-                <h2>
-                    {{ total_customers }}
-                </h2>
-
+                <div>
+                    <p class="stat-label">Customers</p>
+                    <h2>{{ total_customers }}</h2>
+                </div>
+                <div class="stat-icon">👥</div>
             </div>
-
-            <div class="stat-icon">
-                👥
-            </div>
-
         </div>
 
-
-        <!-- Pending Sales -->
-
         <div class="stat-card">
-
             <div class="stat-card-content">
-
-                <p class="stat-label">
-                    Pending Sales
-                </p>
-
-                <h2>
-                    {{ pending_sales }}
-                </h2>
-
+                <div>
+                    <p class="stat-label">Pending Sales</p>
+                    <h2>{{ pending_sales }}</h2>
+                </div>
+                <div class="stat-icon">🛒</div>
             </div>
-
-            <div class="stat-icon">
-                🛒
-            </div>
-
         </div>
-
 
     </div>
 
 
-    <!-- =====================================
-         SALES SUMMARY
-         ===================================== -->
+    <!-- Sales Trend Chart -->
+    <div class="dashboard-card chart-card sales-trend-card">
 
+        <div class="card-header">
+            <div>
+                <h3>Sales Trend</h3>
+                <p>Daily confirmed sales revenue</p>
+            </div>
+
+            <span class="chart-period-label">Last 7 Days</span>
+        </div>
+
+        <div class="chart-container sales-chart-container">
+            <canvas id="salesTrendChart"></canvas>
+        </div>
+
+    </div>
+
+
+    <!-- Analytics Charts -->
+    <div class="dashboard-grid analytics-grid">
+
+        <!-- Inventory by Category -->
+        <div class="dashboard-card chart-card">
+
+            <div class="card-header">
+                <div>
+                    <h3>Inventory by Category</h3>
+                    <p>Product distribution across categories</p>
+                </div>
+            </div>
+
+            <div class="chart-container doughnut-chart-container">
+                <canvas id="categoryChart"></canvas>
+            </div>
+
+        </div>
+
+
+        <!-- Stock Overview -->
+        <div class="dashboard-card chart-card">
+
+            <div class="card-header">
+                <div>
+                    <h3>Stock Overview</h3>
+                    <p>Available stock compared with minimum stock</p>
+                </div>
+            </div>
+
+            <div class="chart-container stock-chart-container">
+                <canvas id="stockChart"></canvas>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Sales Summary -->
     <div class="dashboard-grid">
-
 
         <div class="dashboard-card">
 
             <div class="card-header">
-
                 <div>
-
-                    <h2>
-                        Today's Sales
-                    </h2>
-
-                    <p>
-                        Confirmed sales today
-                    </p>
-
+                    <h3>Today's Sales</h3>
+                    <p>Confirmed sales today</p>
                 </div>
-
             </div>
 
-            <div class="sales-total">
-
-                ₹{{ todays_sales }}
-
+            <div class="sales-summary-content">
+                <h2 class="sales-total">₹{{ todays_sales|default:"0" }}</h2>
+                <span class="summary-description">Today's revenue</span>
             </div>
 
         </div>
@@ -179,391 +149,417 @@ Dashboard
         <div class="dashboard-card">
 
             <div class="card-header">
-
                 <div>
-
-                    <h2>
-                        Sales Overview
-                    </h2>
-
-                    <p>
-                        Current sales status
-                    </p>
-
+                    <h3>Sales Overview</h3>
+                    <p>Current sales status</p>
                 </div>
-
             </div>
-
 
             <div class="sales-overview">
 
                 <div>
-
-                    <span>
-                        Pending
-                    </span>
-
-                    <strong>
-                        {{ pending_sales }}
-                    </strong>
-
+                    <span>Pending</span>
+                    <h2>{{ pending_sales }}</h2>
                 </div>
 
-
                 <div>
-
-                    <span>
-                        Confirmed
-                    </span>
-
-                    <strong>
-                        {{ confirmed_sales }}
-                    </strong>
-
+                    <span>Confirmed</span>
+                    <h2>{{ confirmed_sales }}</h2>
                 </div>
 
             </div>
 
         </div>
 
-
     </div>
 
 
-    <!-- =====================================
-         RECENT SALES + LOW STOCK
-         ===================================== -->
-
+    <!-- Recent Sales and Low Stock -->
     <div class="dashboard-grid">
 
-
         <!-- Recent Sales -->
-
         <div class="dashboard-card">
 
             <div class="card-header">
-
                 <div>
-
-                    <h2>
-                        Recent Sales
-                    </h2>
-
-                    <p>
-                        Latest sales orders
-                    </p>
-
+                    <h3>Recent Sales</h3>
+                    <p>Latest sales orders</p>
                 </div>
 
-                <a
-                    href="{% url 'sales_order_list' %}"
-                    class="table-action"
-                >
+                <a href="{% url 'sales_order_list' %}" class="table-action">
                     View All
                 </a>
-
             </div>
 
-
-            <div class="table-wrapper">
-
+            <div class="table-responsive">
                 <table class="dashboard-table">
-
                     <thead>
-
                         <tr>
-
-                            <th>
-                                Order
-                            </th>
-
-                            <th>
-                                Customer
-                            </th>
-
-                            <th>
-                                Total
-                            </th>
-
-                            <th>
-                                Status
-                            </th>
-
+                            <th>Order</th>
+                            <th>Customer</th>
+                            <th>Total</th>
+                            <th>Status</th>
                         </tr>
-
                     </thead>
 
-
                     <tbody>
-
                         {% for sale in recent_sales %}
-
                         <tr>
-
                             <td>
-
-                                <a
-                                    href="{% url 'sales_order_detail' sale.id %}"
-                                    class="table-action"
-                                >
+                                <a href="{% url 'sales_order_detail' sale.id %}">
                                     {{ sale.order_number }}
                                 </a>
-
                             </td>
+
+                            <td>{{ sale.customer.name }}</td>
+
+                            <td>₹{{ sale.total_amount|floatformat:2 }}</td>
 
                             <td>
-                                {{ sale.customer.name }}
+                                <span class="status-badge status-{{ sale.status|lower }}">
+                                    {{ sale.get_status_display }}
+                                </span>
                             </td>
-
-                            <td>
-                                ₹{{ sale.total_amount }}
-                            </td>
-
-                            <td>
-                                {{ sale.get_status_display }}
-                            </td>
-
                         </tr>
 
                         {% empty %}
-
                         <tr>
-
-                            <td colspan="4">
-                                No sales yet.
+                            <td colspan="4" class="empty-state">
+                                No sales orders available.
                             </td>
-
                         </tr>
-
                         {% endfor %}
-
                     </tbody>
-
                 </table>
-
             </div>
 
         </div>
 
 
         <!-- Low Stock -->
-
         <div class="dashboard-card">
 
             <div class="card-header">
-
                 <div>
-
-                    <h2>
-                        Low Stock
-                    </h2>
-
-                    <p>
-                        Products requiring attention
-                    </p>
-
+                    <h3>Low Stock</h3>
+                    <p>Products requiring attention</p>
                 </div>
 
-                <a
-                    href="{% url 'product_list' %}"
-                    class="table-action"
-                >
+                <a href="{% url 'low_stock_report' %}" class="table-action">
                     View All
                 </a>
-
             </div>
 
-
-            <div class="table-wrapper">
-
+            <div class="table-responsive">
                 <table class="dashboard-table">
-
                     <thead>
-
                         <tr>
-
-                            <th>
-                                Product
-                            </th>
-
-                            <th>
-                                Stock
-                            </th>
-
-                            <th>
-                                Minimum
-                            </th>
-
+                            <th>Product</th>
+                            <th>Stock</th>
+                            <th>Minimum</th>
                         </tr>
-
                     </thead>
 
-
                     <tbody>
-
                         {% for product in low_stock_products %}
-
                         <tr>
-
-                            <td>
-                                {{ product.name }}
-                            </td>
-
-                            <td>
-
-                                <strong>
-                                    {{ product.quantity }}
-                                </strong>
-
-                            </td>
-
-                            <td>
-                                {{ product.minimum_stock }}
-                            </td>
-
+                            <td>{{ product.name }}</td>
+                            <td>{{ product.quantity }}</td>
+                            <td>{{ product.minimum_stock }}</td>
                         </tr>
 
                         {% empty %}
-
                         <tr>
-
-                            <td colspan="3">
-
-                                🎉
-
-                                All products have
-                                sufficient stock.
-
+                            <td colspan="3" class="empty-state">
+                                🎉 All products have sufficient stock.
                             </td>
-
                         </tr>
-
                         {% endfor %}
-
                     </tbody>
-
                 </table>
-
             </div>
 
         </div>
-
 
     </div>
 
 
-    <!-- =====================================
-         RECENT STOCK MOVEMENTS
-         ===================================== -->
-
+    <!-- Recent Stock Movements -->
     <div class="dashboard-card">
 
         <div class="card-header">
-
             <div>
-
-                <h2>
-                    Recent Stock Movements
-                </h2>
-
-                <p>
-                    Latest inventory changes
-                </p>
-
+                <h3>Recent Stock Movements</h3>
+                <p>Latest inventory activity</p>
             </div>
-
         </div>
 
-
-        <div class="table-wrapper">
-
+        <div class="table-responsive">
             <table class="dashboard-table">
 
                 <thead>
-
                     <tr>
-
-                        <th>
-                            Product
-                        </th>
-
-                        <th>
-                            Type
-                        </th>
-
-                        <th>
-                            Quantity
-                        </th>
-
-                        <th>
-                            Previous
-                        </th>
-
-                        <th>
-                            New
-                        </th>
-
-                        <th>
-                            Reason
-                        </th>
-
+                        <th>Product</th>
+                        <th>Movement</th>
+                        <th>Quantity</th>
+                        <th>Previous Stock</th>
+                        <th>New Stock</th>
+                        <th>Reason</th>
                     </tr>
-
                 </thead>
 
-
                 <tbody>
-
                     {% for movement in recent_movements %}
-
                     <tr>
-
-                        <td>
-                            {{ movement.product.name }}
-                        </td>
-
-                        <td>
-                            {{ movement.movement_type }}
-                        </td>
-
-                        <td>
-                            {{ movement.quantity }}
-                        </td>
-
-                        <td>
-                            {{ movement.previous_quantity }}
-                        </td>
-
-                        <td>
-                            {{ movement.new_quantity }}
-                        </td>
-
-                        <td>
-                            {{ movement.reason|default:"-" }}
-                        </td>
-
+                        <td>{{ movement.product.name }}</td>
+                        <td>{{ movement.movement_type }}</td>
+                        <td>{{ movement.quantity }}</td>
+                        <td>{{ movement.previous_quantity }}</td>
+                        <td>{{ movement.new_quantity }}</td>
+                        <td>{{ movement.reason|default:"-" }}</td>
                     </tr>
 
                     {% empty %}
-
                     <tr>
-
-                        <td colspan="6">
-                            No stock movements yet.
+                        <td colspan="6" class="empty-state">
+                            No stock movements recorded yet.
                         </td>
-
                     </tr>
-
                     {% endfor %}
-
                 </tbody>
 
             </table>
-
         </div>
 
     </div>
 
 </div>
+
+
+<!-- Django chart data -->
+{{ sales_chart_labels|json_script:"sales-labels" }}
+{{ sales_chart_data|json_script:"sales-data" }}
+
+{{ category_chart_labels|json_script:"category-labels" }}
+{{ category_chart_data|json_script:"category-data" }}
+
+{{ stock_chart_labels|json_script:"stock-labels" }}
+{{ stock_chart_data|json_script:"stock-data" }}
+{{ minimum_stock_chart_data|json_script:"minimum-stock-data" }}
+
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    // Read Django-generated JSON data
+    function getChartData(id) {
+        const element = document.getElementById(id);
+        return element ? (JSON.parse(element.textContent) || []) : [];
+    }
+
+    const salesLabels = getChartData("sales-labels");
+    const salesData = getChartData("sales-data");
+
+    const categoryLabels = getChartData("category-labels");
+    const categoryData = getChartData("category-data");
+
+    const stockLabels = getChartData("stock-labels");
+    const stockData = getChartData("stock-data");
+    const minimumStockData = getChartData("minimum-stock-data");
+
+
+    // Common chart settings
+    Chart.defaults.font.family = "Arial, sans-serif";
+    Chart.defaults.color = "#6b7280";
+
+
+    // 1. Sales Trend Line Chart
+    const salesCanvas = document.getElementById("salesTrendChart");
+
+    if (salesCanvas) {
+        new Chart(salesCanvas, {
+            type: "line",
+
+            data: {
+                labels: salesLabels,
+
+                datasets: [{
+                    label: "Sales Revenue",
+                    data: salesData,
+
+                    borderColor: "#005b9c",
+                    backgroundColor: "rgba(0, 91, 156, 0.12)",
+
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4,
+
+                    pointRadius: 4,
+                    pointHoverRadius: 7,
+                    pointBackgroundColor: "#005b9c"
+                }]
+            },
+
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return "Revenue: ₹" +
+                                    Number(context.parsed.y).toLocaleString("en-IN");
+                            }
+                        }
+                    }
+                },
+
+                scales: {
+                    y: {
+                        beginAtZero: true,
+
+                        ticks: {
+                            callback: function(value) {
+                                return "₹" + Number(value).toLocaleString("en-IN");
+                            }
+                        },
+
+                        grid: {
+                            color: "#edf0f5"
+                        }
+                    },
+
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+
+    // 2. Inventory by Category Doughnut Chart
+    const categoryCanvas = document.getElementById("categoryChart");
+
+    if (categoryCanvas) {
+        new Chart(categoryCanvas, {
+            type: "doughnut",
+
+            data: {
+                labels: categoryLabels,
+
+                datasets: [{
+                    data: categoryData,
+
+                    backgroundColor: [
+                        "#005b9c",
+                        "#1683c7",
+                        "#45a4df",
+                        "#79c0ed",
+                        "#a8d8f5",
+                        "#004777",
+                        "#64748b"
+                    ],
+
+                    borderWidth: 2,
+                    borderColor: "#ffffff",
+                    hoverOffset: 8
+                }]
+            },
+
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+
+                cutout: "68%",
+
+                plugins: {
+                    legend: {
+                        position: "bottom",
+
+                        labels: {
+                            usePointStyle: true,
+                            padding: 18
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+
+    // 3. Stock Overview Bar Chart
+    const stockCanvas = document.getElementById("stockChart");
+
+    if (stockCanvas) {
+        new Chart(stockCanvas, {
+            type: "bar",
+
+            data: {
+                labels: stockLabels,
+
+                datasets: [
+                    {
+                        label: "Available Stock",
+                        data: stockData,
+                        backgroundColor: "#005b9c",
+                        borderRadius: 5
+                    },
+
+                    {
+                        label: "Minimum Stock",
+                        data: minimumStockData,
+                        backgroundColor: "#f59e0b",
+                        borderRadius: 5
+                    }
+                ]
+            },
+
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+
+                plugins: {
+                    legend: {
+                        position: "bottom",
+
+                        labels: {
+                            usePointStyle: true,
+                            padding: 18
+                        }
+                    }
+                },
+
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: "#edf0f5"
+                        }
+                    },
+
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+});
+</script>
+
 
 {% endblock %}
