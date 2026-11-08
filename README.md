@@ -1,4 +1,4 @@
-<img width="1366" height="768" alt="ims" src="https://github.com/user-attachments/assets/505f338c-ddce-4d32-9a2c-3eb91fd2af50" />
+<img width="1366" height="768" alt="Ims dashboard" src="https://github.com/user-attachments/assets/c44333cb-a50b-42ad-9495-29d5bb0884d2" />
 
 
 # Inventory Management System
